@@ -33,5 +33,15 @@ class RoleAndAdminSeeder extends Seeder
 
         // Sync the role (ensures only 'admin', no duplicates on re-run)
         $user->syncRoles([$adminRole]);
+
+        // Create the editor user
+        $editor = User::firstOrCreate(
+            ['email' => 'editor@example.com'],
+            [
+                'name' => 'Editor User',
+                'password' => 'password',
+            ]
+        );
+        $editor->syncRoles([$editorRole]);
     }
 }
