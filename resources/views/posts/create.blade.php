@@ -97,4 +97,16 @@
         </div>
     </form>
 </div>
+
+<script>
+window.addEventListener('load', function() {
+    tinymce.init({
+        selector: '#content',
+        height: 400,
+        menubar: false,
+        plugins: 'lists link image table code',
+        toolbar: 'undo redo | blocks | bold italic underline | alignleft aligncenter alignright | bullist numlist | link image | code'
+    });
+});
+</script>
 @endsection

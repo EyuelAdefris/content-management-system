@@ -136,5 +136,6 @@
             </main>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
 </body>
 </html>
