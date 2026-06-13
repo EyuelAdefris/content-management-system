@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard')->group(function (
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('pages', PageController::class);
+    Route::resource('posts', PostController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -40,7 +40,7 @@
                         Pages
                     </a>
 
-                    <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition duration-150">
+                    <a href="{{ route('posts.index') }}" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition duration-150">
                         <svg class="mr-3 h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
@@ -120,6 +120,17 @@
             <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto bg-slate-50">
                 <div class="py-8 px-8 max-w-7xl mx-auto">
+                    {{-- Global validation error banner --}}
+                    @if($errors->any())
+                        <div class="mb-6 bg-red-50 border border-red-300 rounded-lg p-4">
+                            <p class="text-sm font-semibold text-red-700 mb-1">Please fix the following errors:</p>
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach($errors->all() as $error)
+                                    <li class="text-sm text-red-600">{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     @yield('content')
                 </div>
             </main>
