@@ -21,7 +21,7 @@
                    name="title"
                    value="{{ old('title') }}"
                    placeholder="Enter post title"
-                   class="w-full px-4 py-2.5 border {{ $errors->has('title') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150">
+                   class="w-full px-4 py-2.5 border {{ $errors->has('title') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150">
             @error('title')
                 <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -36,7 +36,7 @@
                       name="excerpt"
                       rows="3"
                       placeholder="Short description or summary..."
-                      class="w-full px-4 py-2.5 border {{ $errors->has('excerpt') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 resize-y">{{ old('excerpt') }}</textarea>
+                      class="w-full px-4 py-2.5 border {{ $errors->has('excerpt') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 resize-y">{{ old('excerpt') }}</textarea>
             @error('excerpt')
                 <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -49,7 +49,7 @@
                       name="content"
                       rows="10"
                       placeholder="Write your post content here..."
-                      class="w-full px-4 py-2.5 border {{ $errors->has('content') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 resize-y">{{ old('content') }}</textarea>
+                      class="w-full px-4 py-2.5 border {{ $errors->has('content') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 resize-y">{{ old('content') }}</textarea>
             @error('content')
                 <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -64,7 +64,7 @@
                    id="featured_image"
                    name="featured_image"
                    accept="image/*"
-                   class="w-full px-4 py-2.5 border {{ $errors->has('featured_image') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                   class="w-full px-4 py-2.5 border {{ $errors->has('featured_image') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
             @error('featured_image')
                 <p class="mt-1.5 text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -75,7 +75,7 @@
             <label for="status" class="block text-sm font-medium text-slate-700 mb-1.5">Status</label>
             <select id="status"
                     name="status"
-                    class="w-full px-4 py-2.5 border {{ $errors->has('status') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 bg-white">
+                    class="w-full px-4 py-2.5 border {{ $errors->has('status') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 bg-white">
                 <option value="draft"     {{ old('status') == 'draft'     ? 'selected' : '' }}>Draft</option>
                 <option value="published" {{ old('status') == 'published' ? 'selected' : '' }}>Published</option>
             </select>
@@ -87,7 +87,7 @@
         {{-- Actions --}}
         <div class="flex items-center space-x-3">
             <button type="submit"
-                    class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition duration-150">
+                    class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition duration-150">
                 Create Post
             </button>
             <a href="{{ route('posts.index') }}"

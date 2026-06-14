@@ -3,10 +3,10 @@
 @section('content')
 <div class="space-y-6">
     <!-- Welcome banner -->
-    <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+    <div class="bg-gradient-to-r from-blue-600 to-green-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
         <div class="relative z-10">
             <h2 class="text-3xl font-bold tracking-tight">Welcome back, {{ auth()->user()->name }}!</h2>
-            <p class="text-indigo-100 mt-2 max-w-xl">
+            <p class="text-blue-100 mt-2 max-w-xl">
                 Here's a quick overview of your Content Management System. Manage pages, posts, media assets, banners and users all from one place.
             </p>
         </div>
@@ -25,7 +25,7 @@
                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pages</span>
                 <div class="text-3xl font-extrabold text-slate-800">{{ $pagesCount }}</div>
             </div>
-            <div class="p-4 bg-indigo-50 text-indigo-600 rounded-xl">
+            <div class="p-4 bg-blue-50 text-blue-600 rounded-xl">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 4a2 2 0 012 2v6a2 2 0 01-2 2h-2m-6 4h.01" />
                 </svg>
@@ -51,7 +51,7 @@
                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Media</span>
                 <div class="text-3xl font-extrabold text-slate-800">{{ $mediaCount }}</div>
             </div>
-            <div class="p-4 bg-violet-50 text-violet-600 rounded-xl">
+            <div class="p-4 bg-blue-50 text-blue-600 rounded-xl">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>

@@ -21,7 +21,7 @@
                    name="label"
                    value="{{ old('label') }}"
                    placeholder="e.g. About Us"
-                   class="w-full px-4 py-2.5 border {{ $errors->has('label') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150" required>
+                   class="w-full px-4 py-2.5 border {{ $errors->has('label') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150" required>
             @error('label')
                 <p class="mt-1.5 text-xs text-red-600 font-medium">{{ $message }}</p>
             @enderror
@@ -35,7 +35,7 @@
                    name="url"
                    value="{{ old('url') }}"
                    placeholder="/about or https://example.com"
-                   class="w-full px-4 py-2.5 border {{ $errors->has('url') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150" required>
+                   class="w-full px-4 py-2.5 border {{ $errors->has('url') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150" required>
             @error('url')
                 <p class="mt-1.5 text-xs text-red-600 font-medium">{{ $message }}</p>
             @enderror
@@ -49,7 +49,7 @@
                    name="position"
                    value="{{ old('position', 0) }}"
                    min="0"
-                   class="w-full px-4 py-2.5 border {{ $errors->has('position') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150" required>
+                   class="w-full px-4 py-2.5 border {{ $errors->has('position') ? 'border-red-400 bg-red-50' : 'border-slate-300' }} rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150" required>
             @error('position')
                 <p class="mt-1.5 text-xs text-red-600 font-medium">{{ $message }}</p>
             @enderror
@@ -63,7 +63,7 @@
                        name="is_active"
                        value="1"
                        {{ old('is_active', '1') == '1' ? 'checked' : '' }}
-                       class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded">
+                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded">
                 <label for="is_active" class="ml-2 block text-sm font-medium text-slate-700">
                     Active (visible on website navigation)
                 </label>
@@ -76,7 +76,7 @@
         {{-- Actions --}}
         <div class="flex items-center space-x-3">
             <button type="submit"
-                    class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-lg shadow-sm transition duration-150">
+                    class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow-sm transition duration-150">
                 Create Menu Item
             </button>
             <a href="{{ route('menus.index') }}"

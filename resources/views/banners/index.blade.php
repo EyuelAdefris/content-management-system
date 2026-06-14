@@ -4,7 +4,7 @@
 <div class="mb-6 flex items-center justify-between">
     <h2 class="text-2xl font-bold text-slate-800">Banners</h2>
     <a href="{{ route('banners.create') }}"
-       class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition duration-150">
+       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition duration-150">
         <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
@@ -55,7 +55,7 @@
                     </td>
                     <td class="px-6 py-4">
                         @if($banner->link_url)
-                            <a href="{{ $banner->link_url }}" target="_blank" class="text-sm text-indigo-600 hover:text-indigo-900 truncate max-w-xs block">
+                            <a href="{{ $banner->link_url }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-900 truncate max-w-xs block">
                                 {{ $banner->link_url }}
                             </a>
                         @else
@@ -79,7 +79,7 @@
                     <td class="px-6 py-4 text-right">
                         <div class="inline-flex items-center space-x-2">
                             <a href="{{ route('banners.edit', $banner) }}"
-                               class="inline-flex items-center px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-medium rounded-md transition duration-150">
+                               class="inline-flex items-center px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-medium rounded-md transition duration-150">
                                 Edit
                             </a>
                             <form action="{{ route('banners.destroy', $banner) }}" method="POST"

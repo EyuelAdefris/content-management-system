@@ -38,7 +38,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-800">{{ $user->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ $user->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                                <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-100">
                                     {{ $user->roles->pluck('name')->first() ?? 'None' }}
                                 </span>
                             </td>
@@ -48,11 +48,11 @@
                                     <form action="{{ route('users.updateRole', $user) }}" method="POST" class="flex items-center space-x-2">
                                         @csrf
                                         @method('PUT')
-                                        <select name="role" class="rounded-lg shadow-sm border-slate-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm">
+                                        <select name="role" class="rounded-lg shadow-sm border-slate-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm">
                                             <option value="admin" {{ $user->roles->pluck('name')->first() === 'admin' ? 'selected' : '' }}>admin</option>
                                             <option value="editor" {{ $user->roles->pluck('name')->first() === 'editor' ? 'selected' : '' }}>editor</option>
                                         </select>
-                                        <button type="submit" class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-sm">
+                                        <button type="submit" class="inline-flex items-center px-3 py-2 bg-blue-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-sm">
                                             Update
                                         </button>
                                     </form>
