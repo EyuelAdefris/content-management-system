@@ -1,6 +1,9 @@
 {
   "$schema": "https://schema.railpack.com",
   "providers": ["php"],
-  "phpVersion": "8.4"
+  "phpVersion": "8.4",
+  "deploy": {
+    "startCommand": "php artisan storage:link --force && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"
+  }
 }
 
