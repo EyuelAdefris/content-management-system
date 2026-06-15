@@ -11,9 +11,24 @@ class PageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $pages = Page::with('author')->latest()->get();
+        $query = Page::with('author')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $pages = $query->paginate(10)->withQueryString();
+
         return view('pages.index', compact('pages'));
     }
 
@@ -38,13 +53,20 @@ class PageController extends Controller
             $counter++;
         }
 
-        Page::create([
+        $page = Page::create([
             'title'      => $request->title,
             'slug'       => $slug,
             'content'    => $request->content,
             'status'     => $request->status,
             'created_by' => auth()->id(),
         ]);
+
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Page', 'created', $page->title, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
 
         return redirect()->route('pages.index')
             ->with('success', 'Page created successfully.');
@@ -55,6 +77,10 @@ class PageController extends Controller
      */
     public function edit(Page $page)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $page->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('pages.edit', compact('page'));
     }
 
@@ -63,6 +89,10 @@ class PageController extends Controller
      */
     public function update(PageRequest $request, Page $page)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $page->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $slug = $page->slug;
 
         if ($request->title !== $page->title) {
@@ -82,6 +112,13 @@ class PageController extends Controller
             'status'  => $request->status,
         ]);
 
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Page', 'updated', $page->title, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
+
         return redirect()->route('pages.index')
             ->with('success', 'Page updated successfully.');
     }
@@ -91,6 +128,10 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $page->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $page->delete();
 
         return redirect()->back()

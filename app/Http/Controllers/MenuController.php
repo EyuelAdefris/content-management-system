@@ -7,76 +7,62 @@ use App\Http\Requests\MenuRequest;
 
 class MenuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $menus = Menu::orderBy('position')->get();
-        return view('menus.index', compact('menus'));
+        $menus = Menu::with(['author', 'items'])->latest()->get();
+        $activeMenuId = $request->query('menu', $menus->first()->id ?? null);
+        $activeMenu = $activeMenuId ? $menus->firstWhere('id', $activeMenuId) : null;
+
+        return view('menus.index', compact('menus', 'activeMenu'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('menus.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(MenuRequest $request)
     {
-        Menu::create([
-            'label'     => $request->label,
-            'url'       => $request->url,
-            'position'  => $request->position,
-            'is_active' => $request->boolean('is_active'),
+        $menu = Menu::create([
+            'name'       => $request->name,
+            'location'   => $request->location,
+            'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('menus.index')->with('success', 'Menu item created successfully.');
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Menu', 'created', $menu->name, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
+
+        return redirect()->route('menus.index', ['menu' => $menu->id])->with('success', 'Menu created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Menu $menu)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Menu $menu)
-    {
-        return view('menus.edit', compact('menu'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(MenuRequest $request, Menu $menu)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $menu->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $menu->update([
-            'label'     => $request->label,
-            'url'       => $request->url,
-            'position'  => $request->position,
-            'is_active' => $request->boolean('is_active'),
+            'name'       => $request->name,
+            'location'   => $request->location,
         ]);
 
-        return redirect()->route('menus.index')->with('success', 'Menu item updated successfully.');
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Menu', 'updated', $menu->name, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
+
+        return redirect()->route('menus.index', ['menu' => $menu->id])->with('success', 'Menu updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Menu $menu)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $menu->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $menu->delete();
 
-        return redirect()->back()->with('success', 'Menu item deleted successfully.');
+        return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
     }
 }

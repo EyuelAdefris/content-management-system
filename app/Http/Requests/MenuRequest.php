@@ -23,10 +23,8 @@ class MenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'label'     => 'required|string|max:255',
-            'url'       => 'required|string|max:255',
-            'position'  => 'required|integer|min:0',
-            'is_active' => 'boolean',
+            'name'     => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
         ];
     }
 }

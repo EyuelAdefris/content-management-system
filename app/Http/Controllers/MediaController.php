@@ -8,9 +8,21 @@ use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mediaItems = Media::with('uploader')->latest()->get();
+        $query = Media::with('uploader')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('file_name', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('file_type')) {
+            $query->where('file_type', $request->file_type);
+        }
+
+        $mediaItems = $query->paginate(12)->withQueryString();
+
         return view('media.index', compact('mediaItems'));
     }
 
@@ -32,12 +44,19 @@ class MediaController extends Controller
             $fileType = 'document';
         }
 
-        Media::create([
+        $media = Media::create([
             'file_name'   => $file->getClientOriginalName(),
             'file_path'   => $storedPath,
             'file_type'   => $fileType,
             'uploaded_by' => auth()->id(),
         ]);
+
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Media', 'uploaded', $media->file_name, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
 
         return redirect()->route('media.index')->with('success', 'Media uploaded successfully.');
     }
@@ -45,7 +64,7 @@ class MediaController extends Controller
     public function destroy(Media $media)
     {
         if (!auth()->user()->hasRole('admin') && $media->uploaded_by !== auth()->id()) {
-            abort(403);
+            abort(403, 'Unauthorized action.');
         }
 
         if (Storage::disk('public')->exists($media->file_path)) {

@@ -13,9 +13,24 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $posts = Post::with('author')->latest()->get();
+        $query = Post::with('author')->latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $posts = $query->paginate(10)->withQueryString();
+
         return view('posts.index', compact('posts'));
     }
 
@@ -74,7 +89,7 @@ class PostController extends Controller
             }
         }
 
-        Post::create([
+        $post = Post::create([
             'title'          => $request->title,
             'slug'           => $slug,
             'excerpt'        => $request->excerpt,
@@ -83,6 +98,13 @@ class PostController extends Controller
             'status'         => $request->status,
             'created_by'     => auth()->id(),
         ]);
+
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\NewPostNotification($post));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send NewPostNotification: ' . $e->getMessage());
+        }
 
         return redirect()->route('posts.index')
             ->with('success', 'Post created successfully.');
@@ -93,6 +115,10 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $post->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('posts.edit', compact('post'));
     }
 
@@ -101,6 +127,10 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, Post $post)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $post->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         // Regenerate slug only if title changed
         $slug = $post->slug;
         if ($request->title !== $post->title) {
@@ -154,6 +184,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $post->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         // Delete featured image from storage if exists
         if ($post->featured_image) {
             Storage::disk('public')->delete($post->featured_image);

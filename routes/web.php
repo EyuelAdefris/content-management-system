@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
@@ -34,10 +35,20 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class);
     Route::resource('banners', BannerController::class);
     Route::resource('menus', MenuController::class);
+    Route::post('/menus/{menu}/items', [App\Http\Controllers\MenuItemController::class, 'store'])->name('menus.items.store');
+    Route::put('/menus/{menu}/items/{item}', [App\Http\Controllers\MenuItemController::class, 'update'])->name('menus.items.update');
+    Route::delete('/menus/{menu}/items/{item}', [App\Http\Controllers\MenuItemController::class, 'destroy'])->name('menus.items.destroy');
 
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
     Route::post('/media', [MediaController::class, 'store'])->name('media.store');
     Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
+
+    Route::get('/account', [AccountController::class, 'index'])->name('account.index');
+    Route::put('/account', [AccountController::class, 'update'])->name('account.update');
+    Route::put('/account/password', [AccountController::class, 'updatePassword'])->name('account.password');
+
+    Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
 });
 
 require __DIR__.'/auth.php';

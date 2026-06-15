@@ -52,11 +52,11 @@ class NewPasswordController extends Controller
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
+        // If the password was successfully reset, redirect to the login page
+        // with a success message — the user must sign in with their new password.
+        // If there is an error, redirect back with the error message.
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
+                    ? redirect()->route('login')->with('success', 'Your password has been reset successfully. Please sign in with your new password.')
                     : back()->withInput($request->only('email'))
                         ->withErrors(['email' => __($status)]);
     }

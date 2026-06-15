@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Banner extends Model
 {
-    protected $fillable = ['title', 'image', 'link_url', 'position', 'is_active'];
+    protected $fillable = ['title', 'image', 'link_url', 'position', 'is_active', 'created_by'];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

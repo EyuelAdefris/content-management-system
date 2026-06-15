@@ -5,15 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Http\Requests\BannerRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $banners = Banner::orderBy('position')->get();
+        $query = Banner::latest();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
+
+        $banners = $query->paginate(10)->withQueryString();
+
         return view('banners.index', compact('banners'));
     }
 
@@ -32,13 +45,21 @@ class BannerController extends Controller
     {
         $imagePath = $request->file('image')->store('banners', 'public');
 
-        Banner::create([
+        $banner = Banner::create([
             'title'     => $request->title,
             'image'     => $imagePath,
             'link_url'  => $request->link_url,
             'position'  => $request->position,
             'is_active' => $request->boolean('is_active'),
+            'created_by' => auth()->id(),
         ]);
+
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Banner', 'created', $banner->title, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
 
         return redirect()->route('banners.index')->with('success', 'Banner created successfully.');
     }
@@ -56,6 +77,10 @@ class BannerController extends Controller
      */
     public function edit(Banner $banner)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $banner->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return view('banners.edit', compact('banner'));
     }
 
@@ -64,6 +89,10 @@ class BannerController extends Controller
      */
     public function update(BannerRequest $request, Banner $banner)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $banner->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $data = [
             'title'     => $request->title,
             'link_url'  => $request->link_url,
@@ -80,6 +109,13 @@ class BannerController extends Controller
 
         $banner->update($data);
 
+        try {
+            $users = \App\Models\User::all();
+            \Illuminate\Support\Facades\Notification::send($users, new \App\Notifications\ContentChangeNotification('Banner', 'updated', $banner->title, auth()->user()->name ?? 'Unknown'));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send ContentChangeNotification: ' . $e->getMessage());
+        }
+
         return redirect()->route('banners.index')->with('success', 'Banner updated successfully.');
     }
 
@@ -88,6 +124,10 @@ class BannerController extends Controller
      */
     public function destroy(Banner $banner)
     {
+        if (!auth()->user()->hasRole('admin') && auth()->id() !== $banner->created_by) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (Storage::disk('public')->exists($banner->image)) {
             Storage::disk('public')->delete($banner->image);
         }

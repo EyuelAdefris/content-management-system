@@ -100,4 +100,52 @@ class PostTest extends TestCase
             'id' => $post->id,
         ]);
     }
+
+    public function test_editor_cannot_edit_other_user_post(): void
+    {
+        $otherUser = User::factory()->create();
+        $otherUser->assignRole('editor');
+
+        $post = Post::create([
+            'title' => 'Other User Post',
+            'slug' => 'other-user-post',
+            'content' => 'Some content',
+            'status' => 'draft',
+            'created_by' => $otherUser->id,
+        ]);
+
+        $response = $this->get(route('posts.edit', $post));
+        $response->assertStatus(403);
+
+        $response = $this->put(route('posts.update', $post), [
+            'title' => 'Updated Title',
+            'content' => 'Updated content',
+            'status' => 'draft',
+        ]);
+        $response->assertStatus(403);
+    }
+
+    public function test_admin_can_edit_any_post(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $post = Post::create([
+            'title' => 'Editor Post',
+            'slug' => 'editor-post',
+            'content' => 'Some content',
+            'status' => 'draft',
+            'created_by' => $this->user->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('posts.edit', $post));
+        $response->assertStatus(200);
+
+        $response = $this->put(route('posts.update', $post), [
+            'title' => 'Updated by Admin',
+            'content' => 'Updated content',
+            'status' => 'draft',
+        ]);
+        $response->assertRedirect(route('posts.index'));
+    }
 }
