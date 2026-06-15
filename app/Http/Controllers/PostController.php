@@ -74,7 +74,7 @@ class PostController extends Controller
         $imagePath = null;
         if ($request->hasFile('featured_image')) {
             try {
-                $path = $request->file('featured_image')->storePublicly('posts', 'public');
+                $path = $request->file('featured_image')->store('posts', 'public');
                 if ($path === false) {
                     return back()->withInput()->withErrors([
                         'featured_image' => 'The image could not be saved. Check storage permissions.',
@@ -147,7 +147,7 @@ class PostController extends Controller
         $imagePath = $post->featured_image;
         if ($request->hasFile('featured_image')) {
             try {
-                $path = $request->file('featured_image')->storePublicly('posts', 'public');
+                $path = $request->file('featured_image')->store('posts', 'public');
                 if ($path === false) {
                     return back()->withInput()->withErrors([
                         'featured_image' => 'The image could not be saved. Check storage permissions.',
