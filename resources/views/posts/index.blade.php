@@ -40,15 +40,6 @@
     </form>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 flex items-center px-4 py-3 bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg">
-        <svg class="mr-2 h-4 w-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        {{ session('success') }}
-    </div>
-@endif
-
 <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden overflow-x-auto">
     @if($posts->isEmpty())
         <div class="py-16 text-center text-slate-500">
@@ -113,7 +104,7 @@
                                     Edit
                                 </a>
                                 <form action="{{ route('posts.destroy', $post) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
+                                      data-confirm="Are you sure you want to delete this post? This action cannot be undone.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"

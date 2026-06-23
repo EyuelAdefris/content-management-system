@@ -1,26 +1,53 @@
-# FullStack CMS — Project Summary
+# FullStack CMS — Evaluation Guide
 
-Professional summary and usage guide for the FullStack Content Management System (CMS).
+Welcome to the Content Management System (CMS). This system is a fully functional, production-ready backend built with Laravel, designed for high performance, modern UI/UX, and secure content management.
 
-## Project overview
+## 🚀 Quick Access (Manager Evaluation)
 
-This repository contains a full-featured CMS built with Laravel and modern frontend tooling (Vite/Tailwind). The system supports pages, posts, media uploads, banners, menus, roles/permissions and notifications. It is production-ready for internal demos and evaluation.
+You can access the live production system to test the functionality here:
+**Live URL:** [https://content-management-system-production-1e86.up.railway.app](https://content-management-system-production-1e86.up.railway.app)
 
-## Key features
+*(If testing locally, use `http://127.0.0.1:8000/login`)*
 
-- Content types: Pages, Posts, Banners, Media
-- Menu management with nested `MenuItem`s
-- User management with roles & permissions
-- File uploads and media library
-- Notifications for content changes and new posts
-- RESTful controllers and blade views for admin UI
+### Test Credentials
+Please use the following credentials to log in and evaluate the system:
+- **Admin Email:** `admin@example.com`
+- **Admin Password:** `Password`
 
-## Tech stack & architecture
+- **Editor Email:** `editor@example.com`
+- **Editor Password:** `Password`
 
-- Backend: PHP 8.x, Laravel
-- Frontend: Vite, Tailwind CSS
-- DB: MySQL / MariaDB (configurable in `.env`)
-- Queue: Laravel queue (configurable)
+---
+
+## 🌟 Core Functionality Overview
+
+This CMS is equipped with enterprise-grade features that you can test immediately:
+
+1. **Modern, Responsive Dashboard**
+   - Click the **Dark Mode / Light Mode** toggle (Sun/Moon icon) in the top right to see the UI flawlessly adapt.
+   - Professional, non-intrusive **SweetAlert popup notifications** (slide-in toasts for success messages, and sleek centered dialogs for delete confirmations).
+
+2. **Cloud Media Library**
+   - Navigate to **Media** and try uploading an image. 
+   - The system is fully integrated with **Cloudinary**. Images are instantly securely transferred to the cloud and served globally via CDN, ensuring lightning-fast load times and zero data loss during server deployments.
+
+3. **Content Management**
+   - **Pages & Posts:** Create, edit, and format content using the integrated WYSIWYG editor.
+   - **Banners:** Manage homepage marketing banners seamlessly.
+   - **Menus:** Build complex, nested navigation menus dynamically from the admin panel.
+
+4. **Role-Based Access Control (RBAC)**
+   - The **Admin** account has full control, including the ability to manage other Users and assign roles.
+   - The **Editor** account has restricted permissions focused purely on content creation.
+
+---
+
+## Tech Stack & Architecture
+
+- **Backend:** PHP 8.x, Laravel 11/10
+- **Frontend:** Tailwind CSS, AlpineJS, SweetAlert2
+- **Storage:** Cloudinary (Cloud Storage / CDN)
+- **Database:** MySQL / MariaDB
 
 ## Important files & locations
 

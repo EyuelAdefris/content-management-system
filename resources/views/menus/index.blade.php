@@ -23,15 +23,6 @@
         </button>
     </div>
 
-    @if(session('success'))
-        <div class="mb-6 flex items-center px-4 py-3 bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg">
-            <svg class="mr-2 h-4 w-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="flex flex-col md:flex-row gap-6">
         <!-- Sidebar: Manage Menus -->
         <div class="w-full md:w-1/3 lg:w-1/4">
@@ -88,7 +79,7 @@
                                     </svg>
                                     Add Link
                                 </button>
-                                <form action="{{ route('menus.destroy', $activeMenu) }}" method="POST" onsubmit="return confirm('Delete this entire menu group?')">
+                                <form action="{{ route('menus.destroy', $activeMenu) }}" method="POST" data-confirm="Delete this entire menu group?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition" title="Delete Menu">
@@ -122,7 +113,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                             </svg>
                                         </button>
-                                        <form action="{{ route('menus.items.destroy', ['menu' => $activeMenu->id, 'item' => $item->id]) }}" method="POST" onsubmit="return confirm('Delete this link?')">
+                                        <form action="{{ route('menus.items.destroy', ['menu' => $activeMenu->id, 'item' => $item->id]) }}" method="POST" data-confirm="Delete this link?">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 transition" title="Delete Link">

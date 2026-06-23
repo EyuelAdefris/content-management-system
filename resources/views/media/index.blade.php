@@ -5,15 +5,6 @@
     <h2 class="text-2xl font-bold text-slate-800">Media Library</h2>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 flex items-center px-4 py-3 bg-green-50 border border-green-200 text-green-800 text-sm rounded-lg shadow-sm">
-        <svg class="mr-2 h-4 w-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        {{ session('success') }}
-    </div>
-@endif
-
 <!-- Search and Filter Form -->
 <div class="mb-6 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4">
     <form action="{{ route('media.index') }}" method="GET" class="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -124,7 +115,7 @@
                         Copy URL
                     </button>
                     @if(auth()->user()->hasRole('admin') || $item->uploaded_by === auth()->id())
-                        <form action="{{ route('media.destroy', $item) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this media file?')" class="inline flex-1">
+                        <form action="{{ route('media.destroy', $item) }}" method="POST" data-confirm="Are you sure you want to delete this media file?" class="inline flex-1">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="w-full inline-flex justify-center items-center px-2 py-1 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-medium rounded transition duration-150">
