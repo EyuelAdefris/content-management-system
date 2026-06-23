@@ -32,7 +32,7 @@
         <div class="mb-6">
             <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Current Image</label>
             <div class="mb-3">
-                <img src="{{ Storage::url($banner->image) }}"
+                <img src="{{ $banner->image }}"
                      alt="Current Banner Image"
                      class="w-48 h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
             </div>

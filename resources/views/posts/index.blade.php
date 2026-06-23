@@ -75,7 +75,7 @@
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-100">
                     <td class="px-6 py-4">
                         @if($post->featured_image)
-                            <img src="{{ \Illuminate\Support\Facades\Storage::url($post->featured_image) }}"
+                            <img src="{{ $post->featured_image }}"
                                  alt="{{ $post->title }}"
                                  class="w-12 h-12 object-cover rounded-lg border border-slate-200">
                         @else

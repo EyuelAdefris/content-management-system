@@ -74,13 +74,13 @@ class PostController extends Controller
         $imagePath = null;
         if ($request->hasFile('featured_image')) {
             try {
-                $path = $request->file('featured_image')->store('posts', 'public');
+                $path = $request->file('featured_image')->store('posts', 'cloudinary');
                 if ($path === false) {
                     return back()->withInput()->withErrors([
-                        'featured_image' => 'The image could not be saved. Check storage permissions.',
+                        'featured_image' => 'The image could not be saved to Cloudinary.',
                     ]);
                 }
-                $imagePath = $path;
+                $imagePath = Storage::disk('cloudinary')->url($path);
             } catch (\Throwable $e) {
                 Log::error('Featured image upload failed in store(): ' . $e->getMessage());
                 return back()->withInput()->withErrors([
@@ -147,17 +147,17 @@ class PostController extends Controller
         $imagePath = $post->featured_image;
         if ($request->hasFile('featured_image')) {
             try {
-                $path = $request->file('featured_image')->store('posts', 'public');
+                $path = $request->file('featured_image')->store('posts', 'cloudinary');
                 if ($path === false) {
                     return back()->withInput()->withErrors([
-                        'featured_image' => 'The image could not be saved. Check storage permissions.',
+                        'featured_image' => 'The image could not be saved to Cloudinary.',
                     ]);
                 }
                 // Delete old image only after successful new upload
                 if ($post->featured_image) {
-                    Storage::disk('public')->delete($post->featured_image);
+                    $this->deleteFromCloudinary($post->featured_image);
                 }
-                $imagePath = $path;
+                $imagePath = Storage::disk('cloudinary')->url($path);
             } catch (\Throwable $e) {
                 Log::error('Featured image upload failed in update() for post ' . $post->id . ': ' . $e->getMessage());
                 return back()->withInput()->withErrors([
@@ -188,14 +188,32 @@ class PostController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Delete featured image from storage if exists
+        // Delete featured image from Cloudinary if exists
         if ($post->featured_image) {
-            Storage::disk('public')->delete($post->featured_image);
+            $this->deleteFromCloudinary($post->featured_image);
         }
 
         $post->delete();
 
         return redirect()->back()
             ->with('success', 'Post deleted successfully.');
+    }
+
+    /**
+     * Helper: delete a Cloudinary asset given its stored CDN URL or path.
+     */
+    private function deleteFromCloudinary(string $fileUrl): void
+    {
+        $path = $fileUrl;
+        if (str_starts_with($fileUrl, 'http')) {
+            if (preg_match('#/upload/(?:v\d+/)?(.+)$#', $fileUrl, $matches)) {
+                $path = $matches[1];
+            }
+        }
+        try {
+            Storage::disk('cloudinary')->delete($path);
+        } catch (\Throwable $e) {
+            Log::warning('Cloudinary delete failed: ' . $e->getMessage());
+        }
     }
 }

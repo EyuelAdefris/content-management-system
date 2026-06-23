@@ -88,7 +88,7 @@
                     <!-- Preview -->
                     <div class="mb-3">
                         @if($item->file_type === 'image')
-                            <img src="{{ Storage::url($item->file_path) }}" class="w-full h-24 object-cover rounded-lg border border-slate-100 dark:border-slate-600">
+                            <img src="{{ $item->file_path }}" class="w-full h-24 object-cover rounded-lg border border-slate-100 dark:border-slate-600">
                         @elseif($item->file_type === 'video')
                             <div class="w-full h-24 rounded-lg bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex flex-col items-center justify-center text-slate-500 dark:text-slate-400">
                                 <span class="text-3xl">🎥</span>
@@ -119,7 +119,7 @@
                 <!-- Actions -->
                 <div class="px-3 pb-3 pt-1 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-1.5">
                     <button type="button" 
-                            onclick="navigator.clipboard.writeText('{{ asset(Storage::url($item->file_path)) }}'); const btn = this; const origText = btn.innerText; btn.innerText = 'Copied!'; btn.classList.add('bg-green-50', 'text-green-700', 'border-green-200'); setTimeout(() => { btn.innerText = origText; btn.classList.remove('bg-green-50', 'text-green-700', 'border-green-200'); }, 1500);" 
+                            onclick="navigator.clipboard.writeText('{{ $item->file_path }}'); const btn = this; const origText = btn.innerText; btn.innerText = 'Copied!'; btn.classList.add('bg-green-50', 'text-green-700', 'border-green-200'); setTimeout(() => { btn.innerText = origText; btn.classList.remove('bg-green-50', 'text-green-700', 'border-green-200'); }, 1500);" 
                             class="flex-1 inline-flex justify-center items-center px-2 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-medium rounded transition duration-150">
                         Copy URL
                     </button>

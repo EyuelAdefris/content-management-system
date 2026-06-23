@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use App\Http\Requests\BannerRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -43,11 +44,12 @@ class BannerController extends Controller
      */
     public function store(BannerRequest $request)
     {
-        $imagePath = $request->file('image')->store('banners', 'public');
+        $storedPath = $request->file('image')->store('banners', 'cloudinary');
+        $imageUrl   = Storage::disk('cloudinary')->url($storedPath);
 
         $banner = Banner::create([
             'title'     => $request->title,
-            'image'     => $imagePath,
+            'image'     => $imageUrl,
             'link_url'  => $request->link_url,
             'position'  => $request->position,
             'is_active' => $request->boolean('is_active'),
@@ -101,10 +103,9 @@ class BannerController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            if (Storage::disk('public')->exists($banner->image)) {
-                Storage::disk('public')->delete($banner->image);
-            }
-            $data['image'] = $request->file('image')->store('banners', 'public');
+            $this->deleteFromCloudinary($banner->image);
+            $storedPath    = $request->file('image')->store('banners', 'cloudinary');
+            $data['image'] = Storage::disk('cloudinary')->url($storedPath);
         }
 
         $banner->update($data);
@@ -128,12 +129,30 @@ class BannerController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (Storage::disk('public')->exists($banner->image)) {
-            Storage::disk('public')->delete($banner->image);
-        }
+        $this->deleteFromCloudinary($banner->image);
 
         $banner->delete();
 
         return redirect()->back()->with('success', 'Banner deleted successfully.');
+    }
+
+    /**
+     * Helper: delete a Cloudinary asset given its stored CDN URL or path.
+     */
+    private function deleteFromCloudinary(?string $fileUrl): void
+    {
+        if (!$fileUrl) return;
+
+        $path = $fileUrl;
+        if (str_starts_with($fileUrl, 'http')) {
+            if (preg_match('#/upload/(?:v\d+/)?(.+)$#', $fileUrl, $matches)) {
+                $path = $matches[1];
+            }
+        }
+        try {
+            Storage::disk('cloudinary')->delete($path);
+        } catch (\Throwable $e) {
+            Log::warning('Cloudinary delete failed: ' . $e->getMessage());
+        }
     }
 }

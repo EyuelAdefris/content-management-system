@@ -32,8 +32,9 @@ class MediaController extends Controller
             'file' => 'required|file|max:10240|mimes:jpg,jpeg,png,gif,webp,mp4,pdf,docx,doc',
         ]);
 
-        $file = $request->file('file');
-        $storedPath = $file->store('media', 'public');
+        $file       = $request->file('file');
+        $storedPath = $file->store('media', 'cloudinary');
+        $fileUrl    = Storage::disk('cloudinary')->url($storedPath);
 
         $mime = $file->getMimeType();
         if (str_starts_with($mime, 'image/')) {
@@ -46,7 +47,7 @@ class MediaController extends Controller
 
         $media = Media::create([
             'file_name'   => $file->getClientOriginalName(),
-            'file_path'   => $storedPath,
+            'file_path'   => $fileUrl,
             'file_type'   => $fileType,
             'uploaded_by' => auth()->id(),
         ]);
@@ -67,8 +68,18 @@ class MediaController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (Storage::disk('public')->exists($media->file_path)) {
-            Storage::disk('public')->delete($media->file_path);
+        // Extract the Cloudinary path from the stored CDN URL for deletion
+        $storedPath = $media->file_path;
+        if (str_starts_with($storedPath, 'http')) {
+            // Parse public_id from URL: .../upload/{public_id}.{ext}
+            if (preg_match('#/upload/(?:v\d+/)?(.+)$#', $storedPath, $matches)) {
+                $storedPath = $matches[1];
+            }
+        }
+        try {
+            Storage::disk('cloudinary')->delete($storedPath);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Cloudinary delete failed: ' . $e->getMessage());
         }
 
         $media->delete();

@@ -75,7 +75,7 @@
                 @foreach($banners as $banner)
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition duration-100">
                     <td class="px-6 py-4">
-                        <img src="{{ Storage::url($banner->image) }}"
+                        <img src="{{ $banner->image }}"
                              alt="{{ $banner->title }}"
                              class="w-16 h-16 object-cover rounded border border-slate-200 dark:border-slate-600">
                     </td>

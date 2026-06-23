@@ -64,7 +64,7 @@
 
             @if($post->featured_image)
                 <div class="mb-3 flex items-center space-x-4">
-                    <img src="{{ \Illuminate\Support\Facades\Storage::url($post->featured_image) }}"
+                    <img src="{{ $post->featured_image }}"
                          alt="Current featured image"
                          class="w-24 h-24 object-cover rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
                     <div>
